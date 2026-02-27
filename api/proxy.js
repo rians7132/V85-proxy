@@ -10,9 +10,14 @@ export default async function handler(req, res) {
   if (!path) return res.status(400).json({ error: 'Missing path' });
 
   try {
-    const url = 'https://www.atg.se/services/racinginfo/v1/api/' + path;
-    console.log('Fetching:', url);
-    
+    // Support both calendar and games endpoints
+    let url;
+    if (path.startsWith('games/')) {
+      url = 'https://www.atg.se/services/racinginfo/v1/api/' + path;
+    } else {
+      url = 'https://www.atg.se/services/racinginfo/v1/api/calendar/day/' + path;
+    }
+
     const response = await fetch(url, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15',
